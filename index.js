@@ -6,6 +6,8 @@ const url = require("url");
 
 const readData = fs.readFileSync("./txt/start.txt", "utf-8");
 
+const replaceTemplates = require("./modules/replaceTemplates");
+
 // console.log(readData);
 
 // //const final = fs.readFileSync("./txt/final.txt", "utf-8");
@@ -37,18 +39,40 @@ const readData = fs.readFileSync("./txt/start.txt", "utf-8");
 
 // Server 
 
-const server = http.createServer((req,res) => {
-    const {query, pathname} = url.parse(req.url,true);
-    console.log(query, pathname);
+const overview = fs.readFileSync("./templates/Overview.html", "utf-8");
+const product = fs.readFileSync("./templates/product.html", "utf-8");
+const card = fs.readFileSync("./templates/card.html", "utf-8");
 
-    if(pathname == "/about") {
-        res.end(readData);
-    } else {
-       res.end("MY SERVER CREATED, HELLO WORLD !");
-    }
-    
+// STep 1 : Server Create
+const productData = fs.readFileSync("./dev-data/data.json", "utf-8");
+
+const server = http.createServer((req, res) => {
+  //   console.log(req.url);
+  const { query, pathname } = url.parse(req.url, true);
+  console.log(query, pathname);
+  if (pathname === "/" || pathname === "/overview") {
+    res.writeHead(200, { "Content-type": "text/html" });
+    const cardsHtml = JSON.parse(productData)
+      .map((product) => replaceTemplates(card, product))
+      .join("");
+    const output = overview.replace("{%PRODUCT_CARDS%}", cardsHtml);
+    res.end(output);
+  } else if (pathname === "/product") {
+    res.writeHead(200, { "Content-type": "text/html" });
+    const products = JSON.parse(productData)[query.id];
+    const output = replaceTemplates(product, products);
+    res.end(output);
+  } else if (pathname === "/api") {
+    res.writeHead(200, { "Content-type": "application/json" });
+
+    res.end(productData);
+  } else {
+    res.end("Url not found");
+  }
 });
 
-server.listen(9000, "127.0.0.1", () => {
-    console.log("Server Started !");
+// Step 2: Invoke the server or start the server
+const PORT_NO = 9000;
+server.listen(PORT_NO, "127.0.0.1", () => {
+  console.log("server Started on ", PORT_NO);
 });
