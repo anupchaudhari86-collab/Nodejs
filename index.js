@@ -8,7 +8,7 @@ const readData = fs.readFileSync("./txt/start.txt", "utf-8");
 
 const replaceTemplates = require("./modules/replaceTemplates");
 
-const port = process.env.PORT || 4000;
+
 
 // console.log(readData);
 
@@ -74,7 +74,7 @@ const server = http.createServer((req, res) => {
 });
 
 // Step 2: Invoke the server or start the server
-//const PORT_NO = 9000;
-server.listen(port, "127.0.0.1", () => {
-  console.log("server Started on ", port);
+const PORT_NO = 9000;
+server.listen(port, "0.0.0.0", () => {
+  console.log("server Started on ", PORT_NO);
 });
