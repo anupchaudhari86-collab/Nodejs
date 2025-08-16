@@ -8,8 +8,6 @@ const readData = fs.readFileSync("./txt/start.txt", "utf-8");
 
 const replaceTemplates = require("./modules/replaceTemplates");
 
-const express = require('express');
-const app = express();
 const port = process.env.PORT || 4000;
 
 // console.log(readData);
