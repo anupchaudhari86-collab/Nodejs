@@ -75,6 +75,6 @@ const server = http.createServer((req, res) => {
 
 // Step 2: Invoke the server or start the server
 const PORT_NO = 9000;
-server.listen(port, "0.0.0.0", () => {
+server.listen(PORT_NO, "0.0.0.0/0", () => {
   console.log("server Started on ", PORT_NO);
 });
